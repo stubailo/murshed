@@ -19,6 +19,11 @@ var updateFoursquareDestinations = function(offset, city) {
       item.source = "foursquare";
       item.city = city;
       item._id = item.id;
+      
+      if (item.location.lng && item.location.lat) {
+        item.lngLat = [item.location.lng, item.location.lat];
+      }
+      
       return item;
     });
 

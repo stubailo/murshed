@@ -5,6 +5,15 @@ if (Meteor.isClient) {
     }
   });
 
+if (Meteor.isClient) {
+  Deps.autorun({ function () {
+      //var from = Session.get("from");
+      Meteor.call("getNearByLandmarks",this.from);
+      
+    }
+  });
+
+
   Template.directionsForm.events({
     "keyup input": function (event) {
       var name = event.target.name;
@@ -99,9 +108,11 @@ if (Meteor.isClient) {
 
   Template.questions.helpers({
     questions: function () {
-      return Questions.find();
+	     
+	return Questions.find();
     },
     fromLandmark: function () {
+
       return Landmarks.findOne(this.from);
     },
     toLandmark: function () {
