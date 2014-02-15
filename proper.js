@@ -5,6 +5,21 @@ if (Meteor.isClient) {
       var text = event.target.value;
 
       Session.set(name, text);
+    },
+    "click li": function (event) {
+      var data = event.target.dataset;
+
+      var id = data.id;
+      var type = data.type;
+
+      Session.set("selected-" + type, id);
+      Session.set(type, null);
+    },
+    "click .cancel-selection": function (event) {
+      var data = event.target.dataset;
+      var type = data.type;
+
+      Session.set("selected-" + type, null);
     }
   });
 
@@ -26,6 +41,12 @@ if (Meteor.isClient) {
 
       var regex = new RegExp(to, "i");
       return Landmarks.find({name: regex});
+    },
+    selectedFrom: function () {
+      return Landmarks.findOne(Session.get("selected-from"));
+    },
+    selectedTo: function () {
+      return Landmarks.findOne(Session.get("selected-to"));
     }
   });
 }

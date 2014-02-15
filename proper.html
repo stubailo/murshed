@@ -3,10 +3,10 @@
 </head>
 
 <body>
-  {{> hello}}
+  {{> page}}
 </body>
 
-<template name="hello">
+<template name="page">
   <div class="container">
     {{> directionsForm}}
     <button>Update Foursquare destinations</button>
@@ -20,36 +20,38 @@
 
 <template name="directionsForm">
   <h1>Directions</h1>
-  <form class="row">
-    <div class="col-sm-6">
+  <div class="col-sm-6">
+    {{#if selectedFrom}}
+      {{selectedFrom.name}} <button class="cancel-selection" data-type="from">X</button>
+    {{else}}
       <label>From</label>
       <input class="form-control" name="from" type="text" />
-    </div>
 
-    <div class="col-sm-6">
-      <label>To</label>
-      <input class="form-control to" name="to" type="text" />
-    </div>
-  </form>
-
-  <div class="row">
-    <div class="col-sm-6">
       <ul class="list-group">
         {{#each fromLandmarks}}
-          <li class="list-group-item">{{name}}</li>
+          <li class="list-group-item" data-id="{{_id}}" data-type="from">{{name}}</li>
         {{else}}
           Please type more than 2 characters
         {{/each}}
       </ul>
-    </div>
-    <div class="col-sm-6">
+    {{/if}}
+  </div>
+
+  <div class="col-sm-6">
+    {{#if selectedTo}}
+      {{selectedTo.name}} <buttonclass="cancel-selection" data-type="from">X</button>
+    {{else}}
+      <label>To</label>
+      <input class="form-control to" name="to" type="text" />
+
       <ul class="list-group">
         {{#each toLandmarks}}
-          <li class="list-group-item">{{name}}</li>
+          <li class="list-group-item" data-id="{{_id}}" data-type="to">{{name}}</li>
         {{else}}
           Please type more than 2 characters
         {{/each}}
-      </ul>
-    </div>
+      </ul> 
+    {{/if}}
   </div>
+
 </template>
