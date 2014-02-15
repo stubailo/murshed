@@ -41,10 +41,28 @@ if (Meteor.isClient) {
         from: Session.get("selected-from"),
         to: Session.get("selected-to")
       });
+    },
+    "click .up": function(){
+      Answers.update({
+        _id: this._id
+      }, {$set: {
+        upVotes: (this.upVotes || 0) + 1
+      }});
+    },
+    "click .down": function(){
+      Answers.update({
+        _id: this._id
+      }, {$set: {
+        downVotes: (this.downVotes || 0) + 1
+      }});
     }
+
   });
 
   Template.directionsForm.helpers({
+    score: function () {
+      return (this.upVotes-this.downVotes) || 0;
+    },
     fromLandmarks: function () {
       var from = Session.get("from");
       if (!from || from.length < 3) {
@@ -81,10 +99,26 @@ if (Meteor.isClient) {
     },
     answers: function () {
       var questionId = this._id;
-      console.log("hello", questionId);
-      return Answers.find({questionId: questionId});
+      var finalScore = Answers.find({questionId: questionId}).fetch();
+      return _.sortBy(finalScore, function (answer) {
+        return -(answer.upVotes - answer.downVotes);
+      });
+    },
+    similarQuestions: function () {
+      return Questions.find();
+    },
+    fromLandmark: function () {
+      return Landmarks.findOne(this.from);
+    },
+    toLandmark: function () {
+      return Landmarks.findOne(this.to);
+    },
+    percent: function () {
+      return this.upVotes/(this.downVotes+this.upVotes)*100;
     }
   });
+
+  var textcompleteEnabled = false;
 
   Template.questions.events({
     "click .answer": function () {
@@ -99,10 +133,39 @@ if (Meteor.isClient) {
 
       Answers.insert({
         questionId: questionId,
-        text: answerContent
+        text: answerContent,
+        upVotes: 0,
+        downVotes:0
       });
 
       Session.set("questionBeingAnswered", null);
+    },
+    "focus textarea.answer-textarea": function (event, template) {
+      if (! textcompleteEnabled) {
+        console.log("focused");
+        textcompleteEnabled = true;
+
+        $(template.find("textarea")).textcomplete([{
+          match: /(^|\s)@(\w*)$/,
+          search: function (term, callback) {
+            console.log(term);
+            var regex = new RegExp(term, "i");
+            var landmarks = Landmarks.find({name: regex}).fetch();
+
+            callback(_.map(landmarks, function (landmark) {
+              return landmark.name;
+            }));
+          },
+          replace: function (term) {
+            return "<" + term + ">";
+          }
+        }]);
+      }
+    },
+    "blur .textcomplete-wrapper textarea": function (event, template) {
+      console.log("blur");
+      $(template.find("textarea")).textcomplete("destroy");
+      textcompleteEnabled = false;
     }
   });
 
