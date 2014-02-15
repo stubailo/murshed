@@ -13,6 +13,10 @@ var updateFoursquareDestinations = function(offset, city) {
     }
   },
   function(error, result){
+    if (error) {
+      console.log(error);
+    }
+          
     var data = result.data;
     var venues = _.map(data.response.groups[0].items, function(item){
       item = item.venue;
