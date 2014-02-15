@@ -85,6 +85,8 @@ if (Meteor.isClient) {
     }
   });
 
+  var textcompleteEnabled = false;
+
   Template.questions.events({
     "click .answer": function () {
       Session.set("questionBeingAnswered", this._id);
@@ -102,6 +104,33 @@ if (Meteor.isClient) {
       });
 
       Session.set("questionBeingAnswered", null);
+    },
+    "focus textarea.answer-textarea": function (event, template) {
+      if (! textcompleteEnabled) {
+        console.log("focused");
+        textcompleteEnabled = true;
+
+        $(template.find("textarea")).textcomplete([{
+          match: /(^|\s)@(\w*)$/,
+          search: function (term, callback) {
+            console.log(term);
+            var regex = new RegExp(term, "i");
+            var landmarks = Landmarks.find({name: regex}).fetch();
+
+            callback(_.map(landmarks, function (landmark) {
+              return landmark.name;
+            }));
+          },
+          replace: function (term) {
+            return "<" + term + ">";
+          }
+        }]);
+      }
+    },
+    "blur .textcomplete-wrapper textarea": function (event, template) {
+      console.log("blur");
+      $(template.find("textarea")).textcomplete("destroy");
+      textcompleteEnabled = false;
     }
   });
 
