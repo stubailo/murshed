@@ -46,8 +46,10 @@ if (Meteor.isClient) {
       }, {$set: {
         downVotes: (this.downVotes || 0) + 1
       }});
+    },
+    "click .landmark": function (event) {
+      event.preventDefault();
     }
-
   });
 
   var getPercentScore = function (answer) {
@@ -114,6 +116,23 @@ if (Meteor.isClient) {
     },
     percent: function () {
       return getPercentScore(this);
+    },
+    answerLandmarked: function() {
+      var answerLandmarks = this.text.match(/\[.*?\]/g);
+      answerLandmarks = _.map(answerLandmarks, function (untrimmed) {
+        return untrimmed.substr(1, untrimmed.length - 2);
+      });
+
+      console.log(answerLandmarks);
+
+      answerLandmarks = Landmarks.find({
+        name: {$in: answerLandmarks}
+      }).fetch();
+
+      console.log(answerLandmarks);
+
+      return this.text.replace(/\[/g, "<a href='#' class='landmark'>")
+        .replace(/\]/g, "</a>");
     }
   });
 
@@ -130,11 +149,21 @@ if (Meteor.isClient) {
       var answerContent = $(template.find(".answer-textarea")).val();
       var questionId = this._id;
 
+      var answerLandmarks = answerContent.match(/\[.*?\]/g);
+      answerLandmarks = _.map(answerLandmarks, function (untrimmed) {
+        return untrimmed.substr(1, untrimmed.length - 2);
+      });
+
+      answerLandmarks = Landmarks.find({
+        name: {$in: answerLandmarks}
+      }).fetch();
+
       Answers.insert({
         questionId: questionId,
         text: answerContent,
         upVotes: 0,
-        downVotes:0
+        downVotes:0,
+        landmarks: answerLandmarks
       });
 
       Questions.update({_id: questionId},
@@ -161,7 +190,7 @@ if (Meteor.isClient) {
             }));
           },
           replace: function (term) {
-            return "<" + term + ">";
+            return " [" + term + "]";
           }
         }]);
       }
@@ -192,6 +221,7 @@ if (Meteor.isClient) {
     answerCount: function() {
       return this.answerCount || 0;
     }
+
 
   });
 }
