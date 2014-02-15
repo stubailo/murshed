@@ -72,8 +72,16 @@ if (Meteor.isClient) {
     },
     answers: function () {
       var questionId = this._id;
-      console.log("hello", questionId);
       return Answers.find({questionId: questionId});
+    },
+    similarQuestions: function () {
+      return Questions.find();
+    },
+    fromLandmark: function () {
+      return Landmarks.findOne(this.from);
+    },
+    toLandmark: function () {
+      return Landmarks.findOne(this.to);
     }
   });
 

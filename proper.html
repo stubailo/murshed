@@ -8,6 +8,8 @@
 
 <template name="page">
   <div class="container">
+    <h1>PropeRoute</h1>
+
     {{> directionsForm}}
 
     <hr />
@@ -20,17 +22,17 @@
 </template>
 
 <template name="directionsForm">
-  <h1>Directions</h1>
   <div class="row">
     <div class="col-sm-6">
+      <h3>Where are you headed?</h3>
       <div class="panel panel-default">
-        <div class="panel-heading">
-          From
-        </div>
+        <div class="panel-heading">From</div>
+
         <div class="panel-body">
           {{#if selectedFrom}}
             {{selectedFrom.name}}
-            <button class="cancel-selection" data-type="from">X</button>
+            <button class="cancel-selection btn btn-xs btn-danger pull-right"
+              data-type="from">Clear</button>
           {{else}}
             <input class="form-control" name="from" type="text" />
             <ul class="list-group">
@@ -45,13 +47,13 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading">
-          To
-        </div>
+        <div class="panel-heading">To</div>
+
         <div class="panel-body">
           {{#if selectedTo}}
             {{selectedTo.name}}
-            <button class="cancel-selection" data-type="to">X</button>
+            <button class="cancel-selection btn btn-xs btn-danger pull-right"
+              data-type="to">Clear</button>
           {{else}}
             <input class="form-control to" name="to" type="text" />
 
@@ -82,10 +84,20 @@
           </div>
         {{/with}}
       {{else}}
-        <h2>Similar questions</h2>
-        <div class="well">
-          No similar questions found.
-        </div>
+        <h3>Similar questions</h3>
+        {{#each similarQuestions}}
+          <div>
+            {{fromLandmark.name}}
+            <span class="glyphicon glyphicon-arrow-right"></span>
+            {{toLandmark.name}}
+          </div>
+        {{else}}
+          <div class="well">
+            No similar questions found.
+          </div>
+        {{/each}}
+
+        <h3>Post this question</h3>
         <p>This question hasn't been posted yet.</p>
         <button class="btn btn-lg btn-primary post-question">
           Post Question</button>
@@ -95,7 +107,7 @@
 </template>
 
 <template name="questions">
-  <h1>Recent Questions</h1>
+  <h2>Recent Questions</h2>
   {{#each questions}}
     <div class="panel panel-default">
       
