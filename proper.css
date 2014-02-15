@@ -1,14 +1,16 @@
 /* CSS declarations go here */
 .scoreBarDown {
+  margin-left: 20px;
+  margin-top: 15px;
   background: red;
   width: 100px;
-  height: 20px;
+  height: 15px;
   display: inline-block;
   position: relative;
 }
 
 .scoreBarUp {
   background: green;
-  height: 20px;
+  height: 100%;
   position: absolute;
 }

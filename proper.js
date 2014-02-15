@@ -50,10 +50,18 @@ if (Meteor.isClient) {
 
   });
 
+  var getPercentScore = function (answer) {
+    if((answer.downVotes+answer.upVotes)===0)
+        {
+          return 50;
+        }
+      else
+      {
+        return answer.upVotes/(answer.downVotes+answer.upVotes)*100;
+      }
+  };
+
   Template.directionsForm.helpers({
-    score: function () {
-      return (this.upVotes-this.downVotes) || 0;
-    },
     fromLandmarks: function () {
       var from = Session.get("from");
       if (!from || from.length < 3) {
@@ -92,7 +100,7 @@ if (Meteor.isClient) {
       var questionId = this._id;
       var finalScore = Answers.find({questionId: questionId}).fetch();
       return _.sortBy(finalScore, function (answer) {
-        return -(answer.upVotes - answer.downVotes);
+        return -getPercentScore(answer);
       });
     },
     similarQuestions: function () {
@@ -105,7 +113,7 @@ if (Meteor.isClient) {
       return Landmarks.findOne(this.to);
     },
     percent: function () {
-      return this.upVotes/(this.downVotes+this.upVotes)*100;
+      return getPercentScore(this);
     }
   });
 
@@ -127,6 +135,11 @@ if (Meteor.isClient) {
         text: answerContent,
         upVotes: 0,
         downVotes:0
+      });
+
+      Questions.update({_id: questionId},
+      {$set:
+        {answerCount: (this.answerCount || 0) + 1}
       });
 
       Session.set("questionBeingAnswered", null);
@@ -162,7 +175,10 @@ if (Meteor.isClient) {
 
   Template.questions.helpers({
     questions: function () {
-      return Questions.find();
+      return Questions.find({}, {
+        sort: {answerCount: 1},
+        limit: 10
+      });
     },
     fromLandmark: function () {
       return Landmarks.findOne(this.from);
@@ -172,7 +188,11 @@ if (Meteor.isClient) {
     },
     answeringThisQuestion: function () {
       return Session.equals("questionBeingAnswered", this._id);
+    },
+    answerCount: function() {
+      return this.answerCount || 0;
     }
+
   });
 }
 

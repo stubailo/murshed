@@ -77,14 +77,18 @@
           <div>
             <h2>Answers:</h2>
             {{#each answers}}
+              <div class="panel panel-default">
+                <div class="panel-body">
 
-              <p>{{text}}</p>
-            <button class="up">Vote up</button>
-            <button class="down">Vote down</button>
-            {{score}}
-            <div class="scoreBarDown">
-              <div class="scoreBarUp" style="width: {{percent}}%"></div>
-            </div>
+                  <p>{{text}}</p>
+                  <button class="up btn btn-xs btn-default">Vote up</button>
+                  <button class="down btn btn-xs btn-default">Vote down</button>
+            
+                  <div class="scoreBarDown">
+                    <div class="scoreBarUp" style="width: {{percent}}%"></div>
+                  </div>
+                </div>
+              </div>
             {{else}}
               <p>There haven't been any answers yet.</p>
             {{/each}}
@@ -115,30 +119,41 @@
 
 <template name="questions">
   <h2>Recent Questions</h2>
-  {{#each questions}}
-    <div class="panel panel-default">
-      
-      {{#if answeringThisQuestion}}
-        <div class="panel-heading">
-          {{fromLandmark.name}}
-          <span class="glyphicon glyphicon-arrow-right"></span>
-          {{toLandmark.name}}
-        </div>
-        <div class="panel-body">
-          <div>
-            <textarea class="answer-textarea" style="width: 100%"></textarea>
+  <div class="row">
+    {{#each questions}}
+      <div class="col-sm-7">
+        <div class="panel panel-default">
+          
+          {{#if answeringThisQuestion}}
+            <div class="panel-heading">
+              {{fromLandmark.name}}
+              <span class="glyphicon glyphicon-arrow-right"></span>
+              {{toLandmark.name}}
+            </div>
+            <div class="panel-body">
+              <div>
+                <textarea class="answer-textarea" style="width: 100%"></textarea>
+              </div>
+              <div style="text-align: center">
+                <button class="post-answer btn btn-sm btn-success">Post Answer</button>
+                <button class="cancel-answering btn btn-sm btn-danger">Cancel</button>
+              </div>
           </div>
-          <button class="post-answer btn btn-sm btn-success">Post Answer</button>
-          <button class="cancel-answering btn btn-sm btn-danger">Cancel</button>
+          {{else}}
+            <div class="panel-body">
+              {{fromLandmark.name}}
+              <span class="glyphicon glyphicon-arrow-right"></span>
+              {{toLandmark.name}}
+              <div class="pull-right">
+                
+                <button class="btn btn-xs btn-primary answer">Answer</button>
+                <hr style="width=10px, size=5px">
+                <span style="color:red">    {{answerCount}} answered    </span>
+              </div>
+            </div>
+          {{/if}}
         </div>
-      {{else}}
-        <div class="panel-body">
-          {{fromLandmark.name}}
-          <span class="glyphicon glyphicon-arrow-right"></span>
-          {{toLandmark.name}}
-          <button class="btn btn-xs btn-primary answer pull-right">Answer</button>
-        </div>
-      {{/if}}
-    </div>
-  {{/each}}
+      </div>
+    {{/each}}
+  </div>
 </template>
