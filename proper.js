@@ -1,13 +1,31 @@
 if (Meteor.isClient) {
-  Template.hello.greeting = function () {
-    return "Welcome to proper.";
-  };
+  Template.directionsForm.events({
+    "keyup input": function (event, template) {
+      var name = event.target.name;
+      var text = event.target.value;
 
-  Template.hello.events({
-    'click input' : function () {
-      // template data, if any, is available in 'this'
-      if (typeof console !== 'undefined')
-        console.log("You pressed the button");
+      Session.set(name, text);
+    }
+  });
+
+  Template.directionsForm.helpers({
+    fromLandmarks: function () {
+      var from = Session.get("from");
+      if (!from || from.length < 3) {
+        return null;
+      }
+
+      var regex = new RegExp(from, "i");
+      return Landmarks.find({name: regex});
+    },
+    toLandmarks: function () {
+      var to = Session.get("to");
+      if (!to || to.length < 3) {
+        return null;
+      }
+
+      var regex = new RegExp(to, "i");
+      return Landmarks.find({name: regex});
     }
   });
 }

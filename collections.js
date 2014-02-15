@@ -1,0 +1,1 @@
+Landmarks = new Meteor.Collection("landmarks");

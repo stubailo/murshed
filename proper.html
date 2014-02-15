@@ -7,7 +7,49 @@
 </body>
 
 <template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+  <div class="container">
+    {{> directionsForm}}
+    <button>Update Foursquare destinations</button>
+    {{#each locations}}
+      <div>
+        <strong>{{name}}</strong>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name="directionsForm">
+  <h1>Directions</h1>
+  <form class="row">
+    <div class="col-sm-6">
+      <label>From</label>
+      <input class="form-control" name="from" type="text" />
+    </div>
+
+    <div class="col-sm-6">
+      <label>To</label>
+      <input class="form-control to" name="to" type="text" />
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <ul class="list-group">
+        {{#each fromLandmarks}}
+          <li class="list-group-item">{{name}}</li>
+        {{else}}
+          Please type more than 2 characters
+        {{/each}}
+      </ul>
+    </div>
+    <div class="col-sm-6">
+      <ul class="list-group">
+        {{#each toLandmarks}}
+          <li class="list-group-item">{{name}}</li>
+        {{else}}
+          Please type more than 2 characters
+        {{/each}}
+      </ul>
+    </div>
+  </div>
 </template>
