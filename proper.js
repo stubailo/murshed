@@ -32,10 +32,28 @@ if (Meteor.isClient) {
         from: Session.get("selected-from"),
         to: Session.get("selected-to")
       });
+    },
+    "click .up": function(){
+      Answers.update({
+        _id: this._id
+      }, {$set: {
+        upVotes: (this.upVotes || 0) + 1
+      }});
+    },
+    "click .down": function(){
+      Answers.update({
+        _id: this._id
+      }, {$set: {
+        downVotes: (this.downVotes || 0) + 1
+      }});
     }
+
   });
 
   Template.directionsForm.helpers({
+    score: function () {
+      return (this.upVotes-this.downVotes) || 0;
+    },
     fromLandmarks: function () {
       var from = Session.get("from");
       if (!from || from.length < 3) {
@@ -72,7 +90,10 @@ if (Meteor.isClient) {
     },
     answers: function () {
       var questionId = this._id;
-      return Answers.find({questionId: questionId});
+      var finalScore = Answers.find({questionId: questionId}).fetch();
+      return _.sortBy(finalScore, function (answer) {
+        return -(answer.upVotes - answer.downVotes);
+      });
     },
     similarQuestions: function () {
       return Questions.find();
@@ -82,6 +103,9 @@ if (Meteor.isClient) {
     },
     toLandmark: function () {
       return Landmarks.findOne(this.to);
+    },
+    percent: function () {
+      return this.upVotes/(this.downVotes+this.upVotes)*100;
     }
   });
 
@@ -100,7 +124,9 @@ if (Meteor.isClient) {
 
       Answers.insert({
         questionId: questionId,
-        text: answerContent
+        text: answerContent,
+        upVotes: 0,
+        downVotes:0
       });
 
       Session.set("questionBeingAnswered", null);
