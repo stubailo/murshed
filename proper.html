@@ -49,7 +49,9 @@
 
       <ul class="list-group">
         {{#each toLandmarks}}
-          <li class="list-group-item" data-id="{{_id}}" data-type="to">{{name}}</li>
+          <li class="list-group-item" data-id="{{_id}}" data-type="to">
+            {{name}}
+          </li>
         {{else}}
           Please type more than 2 characters
         {{/each}}
@@ -66,18 +68,25 @@
 </template>
 
 <template name="questions">
+  <h1>Recent Questions</h1>
   {{#each questions}}
     <div class="panel panel-default">
-      <div class="panel-heading">
-        {{fromLandmark.name}} -> {{toLandmark.name}}
-        {{#unless answeringThisQuestion}}
-          <button class="btn btn-sm btn-primary answer">Answer</button>
-        {{/unless}}
-      </div>
+      
       {{#if answeringThisQuestion}}
+        <div class="panel-heading">
+          {{fromLandmark.name}} -> {{toLandmark.name}}
+        </div>
         <div class="panel-body">
-          <textarea>Hello</textarea>
-          <button class="cancel-answering">Cancel</button>
+          <div>
+            <textarea style="width: 100%"></textarea>
+          </div>
+          <button class="post-answer btn btn-sm btn-success">Post Answer</button>
+          <button class="cancel-answering btn btn-sm btn-danger">Cancel</button>
+        </div>
+      {{else}}
+        <div class="panel-body">
+          {{fromLandmark.name}} -> {{toLandmark.name}}
+          <button class="btn btn-sm btn-primary answer">Answer</button>
         </div>
       {{/if}}
     </div>

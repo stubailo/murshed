@@ -69,6 +69,9 @@ if (Meteor.isClient) {
   Template.questions.events({
     "click .answer": function () {
       Session.set("questionBeingAnswered", this._id);
+    },
+    "click .cancel-answering": function () {
+      Session.set("questionBeingAnswered", null);
     }
   });
 
