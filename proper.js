@@ -1,6 +1,12 @@
 if (Meteor.isClient) {
+  Template.page.events({
+    "click .update-foursquare": function () {
+      Meteor.call("updateDestinations");
+    }
+  });
+
   Template.directionsForm.events({
-    "keyup input": function (event, template) {
+    "keyup input": function (event) {
       var name = event.target.name;
       var text = event.target.value;
 
@@ -63,6 +69,11 @@ if (Meteor.isClient) {
       } else {
         return null;
       }
+    },
+    answers: function () {
+      var questionId = this._id;
+      console.log("hello", questionId);
+      return Answers.find({questionId: questionId});
     }
   });
 
@@ -71,6 +82,17 @@ if (Meteor.isClient) {
       Session.set("questionBeingAnswered", this._id);
     },
     "click .cancel-answering": function () {
+      Session.set("questionBeingAnswered", null);
+    },
+    "click .post-answer": function (event, template) {
+      var answerContent = $(template.find(".answer-textarea")).val();
+      var questionId = this._id;
+
+      Answers.insert({
+        questionId: questionId,
+        text: answerContent
+      });
+
       Session.set("questionBeingAnswered", null);
     }
   });

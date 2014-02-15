@@ -15,7 +15,7 @@
     {{> questions}}
 
     <hr />
-    <button>Update Foursquare destinations</button>
+    <button class="update-foursquare">Update Foursquare destinations</button>
   </div>
 </template>
 
@@ -23,49 +23,75 @@
   <h1>Directions</h1>
   <div class="row">
     <div class="col-sm-6">
-      {{#if selectedFrom}}
-        {{selectedFrom.name}}
-        <button class="cancel-selection" data-type="from">X</button>
-      {{else}}
-        <label>From</label>
-        <input class="form-control" name="from" type="text" />
-
-        <ul class="list-group">
-          {{#each fromLandmarks}}
-            <li class="list-group-item" data-id="{{_id}}" data-type="from">{{name}}</li>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          From
+        </div>
+        <div class="panel-body">
+          {{#if selectedFrom}}
+            {{selectedFrom.name}}
+            <button class="cancel-selection" data-type="from">X</button>
           {{else}}
-            Please type more than 2 characters
-          {{/each}}
-        </ul>
-      {{/if}}
+            <input class="form-control" name="from" type="text" />
+            <ul class="list-group">
+              {{#each fromLandmarks}}
+                <li class="list-group-item" data-id="{{_id}}" data-type="from">{{name}}</li>
+              {{else}}
+                Please type more than 2 characters
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          To
+        </div>
+        <div class="panel-body">
+          {{#if selectedTo}}
+            {{selectedTo.name}}
+            <button class="cancel-selection" data-type="to">X</button>
+          {{else}}
+            <input class="form-control to" name="to" type="text" />
+
+            <ul class="list-group">
+              {{#each toLandmarks}}
+                <li class="list-group-item" data-id="{{_id}}" data-type="to">
+                  {{name}}
+                </li>
+              {{else}}
+                Please type more than 2 characters
+              {{/each}}
+            </ul> 
+          {{/if}}
+        </div>
+      </div>
     </div>
 
     <div class="col-sm-6">
-      {{#if selectedTo}}
-        {{selectedTo.name}}
-        <button class="cancel-selection" data-type="to">X</button>
+      {{#if question}}
+        {{#with question}}
+          <div>
+            <h2>Answers:</h2>
+            {{#each answers}}
+              <p>{{text}}</p>
+            {{else}}
+              <p>There haven't been any answers yet.</p>
+            {{/each}}
+          </div>
+        {{/with}}
       {{else}}
-        <label>To</label>
-        <input class="form-control to" name="to" type="text" />
-
-        <ul class="list-group">
-          {{#each toLandmarks}}
-            <li class="list-group-item" data-id="{{_id}}" data-type="to">
-              {{name}}
-            </li>
-          {{else}}
-            Please type more than 2 characters
-          {{/each}}
-        </ul> 
+        <h2>Similar questions</h2>
+        <div class="well">
+          No similar questions found.
+        </div>
+        <p>This question hasn't been posted yet.</p>
+        <button class="btn btn-lg btn-primary post-question">
+          Post Question</button>
       {{/if}}
     </div>
   </div>
-
-  {{#if question}}
-    <div>Placeholder for question display</div>
-  {{else}}
-    <button class="btn btn-lg btn-primary post-question">Post Question</button>
-  {{/if}}
 </template>
 
 <template name="questions">
@@ -75,18 +101,22 @@
       
       {{#if answeringThisQuestion}}
         <div class="panel-heading">
-          {{fromLandmark.name}} -> {{toLandmark.name}}
+          {{fromLandmark.name}}
+          <span class="glyphicon glyphicon-arrow-right"></span>
+          {{toLandmark.name}}
         </div>
         <div class="panel-body">
           <div>
-            <textarea style="width: 100%"></textarea>
+            <textarea class="answer-textarea" style="width: 100%"></textarea>
           </div>
           <button class="post-answer btn btn-sm btn-success">Post Answer</button>
           <button class="cancel-answering btn btn-sm btn-danger">Cancel</button>
         </div>
       {{else}}
         <div class="panel-body">
-          {{fromLandmark.name}} -> {{toLandmark.name}}
+          {{fromLandmark.name}}
+          <span class="glyphicon glyphicon-arrow-right"></span>
+          {{toLandmark.name}}
           <button class="btn btn-xs btn-primary answer pull-right">Answer</button>
         </div>
       {{/if}}
