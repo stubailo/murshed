@@ -95,7 +95,13 @@
           </div>
         {{/with}}
       {{else}}
-        <h3>Similar questions</h3>
+        <h3>Post this question</h3>
+        <p>This question hasn't been posted yet.</p>
+        <button class="btn btn-lg btn-primary post-question">
+          Post Question</button>
+      {{/if}}
+      
+      <h3>Similar questions</h3>
         {{#each similarQuestions}}
           <div>
             {{fromLandmark.name}}
@@ -107,12 +113,6 @@
             No similar questions found.
           </div>
         {{/each}}
-
-        <h3>Post this question</h3>
-        <p>This question hasn't been posted yet.</p>
-        <button class="btn btn-lg btn-primary post-question">
-          Post Question</button>
-      {{/if}}
     </div>
   </div>
 </template>

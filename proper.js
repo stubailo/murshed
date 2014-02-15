@@ -5,6 +5,31 @@ if (Meteor.isClient) {
     }
   });
 
+  updateSimilarQuestions = function () {
+    var from = Session.get("selected-from");
+    var to = Session.get("selected-to");
+    
+    Deps.nonreactive(function () {
+    Session.set("similarQuestions", null);
+    if (from && to) {
+        Meteor.call("getNearbyLandmarks", [from, to], function (error, result) {
+          // result is array of [from locations, to locations]
+          console.log(result);
+          var similarQuestions = Questions.find({
+            from: {$in: _.map(result[0], function (landmark) {return landmark._id})},
+            to: {$in: _.map(result[1], function (landmark) {return landmark._id})}
+           }).fetch();
+           
+           
+            Session.set("similarQuestions", similarQuestions);
+           
+        });
+    }
+    });
+  };
+  
+  Deps.autorun(updateSimilarQuestions);
+
   Template.directionsForm.events({
     "keyup input": function (event) {
       var name = event.target.name;
@@ -106,7 +131,7 @@ if (Meteor.isClient) {
       });
     },
     similarQuestions: function () {
-      return Questions.find();
+      return Session.get("similarQuestions");
     },
     fromLandmark: function () {
       return Landmarks.findOne(this.from);
@@ -210,6 +235,7 @@ if (Meteor.isClient) {
       });
     },
     fromLandmark: function () {
+
       return Landmarks.findOne(this.from);
     },
     toLandmark: function () {
@@ -223,11 +249,5 @@ if (Meteor.isClient) {
     }
 
 
-  });
-}
-
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
   });
 }
