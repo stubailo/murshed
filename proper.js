@@ -74,6 +74,13 @@ if (Meteor.isClient) {
     },
     "click .landmark": function (event) {
       event.preventDefault();
+     
+    },
+    "mouseover .landmark": function (event) {
+      var name = $(event.target).text();
+      var prefix= Landmarks.findOne({name: name}).photos.groups[0].items[0].prefix;
+      var suffix = Landmarks.findOne({name: name}).photos.groups[0].items[0].suffix;
+      console.log(prefix + "100x100" + suffix);
     }
   });
 
