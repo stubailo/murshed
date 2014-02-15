@@ -9,12 +9,13 @@
 <template name="page">
   <div class="container">
     {{> directionsForm}}
+
+    <hr />
+
+    {{> questions}}
+
+    <hr />
     <button>Update Foursquare destinations</button>
-    {{#each locations}}
-      <div>
-        <strong>{{name}}</strong>
-      </div>
-    {{/each}}
   </div>
 </template>
 
@@ -22,7 +23,8 @@
   <h1>Directions</h1>
   <div class="col-sm-6">
     {{#if selectedFrom}}
-      {{selectedFrom.name}} <button class="cancel-selection" data-type="from">X</button>
+      {{selectedFrom.name}}
+      <button class="cancel-selection" data-type="from">X</button>
     {{else}}
       <label>From</label>
       <input class="form-control" name="from" type="text" />
@@ -39,7 +41,8 @@
 
   <div class="col-sm-6">
     {{#if selectedTo}}
-      {{selectedTo.name}} <buttonclass="cancel-selection" data-type="from">X</button>
+      {{selectedTo.name}}
+      <button class="cancel-selection" data-type="to">X</button>
     {{else}}
       <label>To</label>
       <input class="form-control to" name="to" type="text" />
@@ -54,4 +57,29 @@
     {{/if}}
   </div>
 
+  {{#if question}}
+    <div>Found a question!</div>
+  {{/if}}
+
+  <button class="btn btn-lg btn-primary post-question">Post Question</button>
+
+</template>
+
+<template name="questions">
+  {{#each questions}}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{fromLandmark.name}} -> {{toLandmark.name}}
+        {{#unless answeringThisQuestion}}
+          <button class="btn btn-sm btn-primary answer">Answer</button>
+        {{/unless}}
+      </div>
+      {{#if answeringThisQuestion}}
+        <div class="panel-body">
+          <textarea>Hello</textarea>
+          <button class="cancel-answering">Cancel</button>
+        </div>
+      {{/if}}
+    </div>
+  {{/each}}
 </template>

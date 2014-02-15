@@ -20,6 +20,12 @@ if (Meteor.isClient) {
       var type = data.type;
 
       Session.set("selected-" + type, null);
+    },
+    "click .post-question": function () {
+      Questions.insert({
+        from: Session.get("selected-from"),
+        to: Session.get("selected-to")
+      });
     }
   });
 
@@ -47,6 +53,37 @@ if (Meteor.isClient) {
     },
     selectedTo: function () {
       return Landmarks.findOne(Session.get("selected-to"));
+    },
+    question: function () {
+      if (Session.get("selected-from") && Session.get("selected-to")) {
+        return Questions.findOne({
+          from: Session.get("selected-from"),
+          to: Session.get("selected-to")
+        });
+      } else {
+        return null;
+      }
+    }
+  });
+
+  Template.questions.events({
+    "click .answer": function () {
+      Session.set("questionBeingAnswered", this._id);
+    }
+  });
+
+  Template.questions.helpers({
+    questions: function () {
+      return Questions.find();
+    },
+    fromLandmark: function () {
+      return Landmarks.findOne(this.from);
+    },
+    toLandmark: function () {
+      return Landmarks.findOne(this.to);
+    },
+    answeringThisQuestion: function () {
+      return Session.equals("questionBeingAnswered", this._id);
     }
   });
 }
