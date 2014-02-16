@@ -9,6 +9,7 @@ var updateFoursquareDestinations = function(offset, city) {
       offset: offset,
       client_id: "QVTGXYI2RTFT1OJK5EI45HA2PQVKYSPS5OXWYNCCA25YYJ4Q",
       client_secret: "3LAGOTH4P2ZGS54UHPUEYU0ZCEKSWLJK4KI4MIRJZTTSUGMU",
+      venuePhotos: 1,
       v: "20140214"
     }
   },

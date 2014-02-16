@@ -221,9 +221,6 @@ if (Meteor.isClient) {
       }
     },
     "blur .textcomplete-wrapper textarea": function (event, template) {
-      console.log("blur");
-      $(template.find("textarea")).textcomplete("destroy");
-      textcompleteEnabled = false;
     }
   });
 

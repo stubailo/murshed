@@ -23,59 +23,59 @@
 
 <template name="directionsForm">
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-7">
       <h3>Where are you headed?</h3>
-      <div class="panel panel-default">
-        <div class="panel-heading">From</div>
 
-        <div class="panel-body">
-          {{#if selectedFrom}}
-            {{selectedFrom.name}}
-            <button class="cancel-selection btn btn-xs btn-danger pull-right"
-              data-type="from">Clear</button>
-          {{else}}
-            <input class="form-control" name="from" type="text" />
-            <ul class="list-group">
-              {{#each fromLandmarks}}
-                <li class="list-group-item" data-id="{{_id}}" data-type="from">{{name}}</li>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <strong>From:</strong>
+              {{#if selectedFrom}}
+                {{selectedFrom.name}}
+                <button class="cancel-selection btn btn-xs btn-danger pull-right"
+                  data-type="from">Clear</button>
               {{else}}
-                Please type more than 2 characters
-              {{/each}}
-            </ul>
-          {{/if}}
+                <input class="form-control from" name="from" type="text" />
+                <ul class="list-group popup">
+                  {{#each fromLandmarks}}
+                    <li class="list-group-item" data-id="{{_id}}" data-type="from">{{name}}</li>
+                  {{/each}}
+                </ul>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <strong>To:</strong>
+              {{#if selectedTo}}
+                {{selectedTo.name}}
+                <button class="cancel-selection btn btn-xs btn-danger pull-right"
+                  data-type="to">Clear</button>
+              {{else}}
+                <input class="form-control to" name="to" type="text" />
+
+                <ul class="list-group popup">
+                  {{#each toLandmarks}}
+                    <li class="list-group-item" data-id="{{_id}}" data-type="to">
+                      {{name}}
+                    </li>
+                  {{/each}}
+                </ul> 
+              {{/if}}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="panel panel-default">
-        <div class="panel-heading">To</div>
 
-        <div class="panel-body">
-          {{#if selectedTo}}
-            {{selectedTo.name}}
-            <button class="cancel-selection btn btn-xs btn-danger pull-right"
-              data-type="to">Clear</button>
-          {{else}}
-            <input class="form-control to" name="to" type="text" />
-
-            <ul class="list-group">
-              {{#each toLandmarks}}
-                <li class="list-group-item" data-id="{{_id}}" data-type="to">
-                  {{name}}
-                </li>
-              {{else}}
-                Please type more than 2 characters
-              {{/each}}
-            </ul> 
-          {{/if}}
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6">
       {{#if question}}
         {{#with question}}
           <div>
-            <h2>Answers:</h2>
+            <h3>Answers</h3>
             {{#each answers}}
               <div class="panel panel-default">
                 <div class="panel-body">
@@ -94,25 +94,28 @@
             {{/each}}
           </div>
         {{/with}}
-      {{else}}
-        <h3>Post this question</h3>
-        <p>This question hasn't been posted yet.</p>
-        <button class="btn btn-lg btn-primary post-question">
-          Post Question</button>
       {{/if}}
       
-      <h3>Similar questions</h3>
+      {{#if similarQuestions}}
+        <h3>Similar questions</h3>
         {{#each similarQuestions}}
           <div>
             {{fromLandmark.name}}
             <span class="glyphicon glyphicon-arrow-right"></span>
             {{toLandmark.name}}
           </div>
-        {{else}}
-          <div class="well">
-            No similar questions found.
-          </div>
         {{/each}}
+      {{/if}}
+
+      {{#unless question}}
+        <button class="btn btn-lg btn-primary post-question">
+          Post Question</button>
+      {{/unless}}
+
+    </div>
+
+    <div class="col-sm-5">
+      Map here
     </div>
   </div>
 </template>
@@ -132,7 +135,7 @@
             </div>
             <div class="panel-body">
               <div>
-                <textarea class="answer-textarea" style="width: 100%"></textarea>
+                <textarea class="answer-textarea form-control"></textarea>
               </div>
               <div style="text-align: center">
                 <button class="post-answer btn btn-sm btn-success">Post Answer</button>

@@ -3,6 +3,7 @@ Meteor.methods({
 	  console.log(landmarkIds);
 	  return _.map(landmarkIds, function (landmarkId) {
 		  var searchedLandmark = Landmarks.findOne(landmarkId);
+      console.log(searchedLandmark.name);
 		  var nearby = Landmarks.find( { lngLat :
                            { $near : searchedLandmark.lngLat,
                              $maxDistance: 0.001

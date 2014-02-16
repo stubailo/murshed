@@ -14,3 +14,16 @@
   height: 100%;
   position: absolute;
 }
+
+textarea, .textcomplete-wrapper {
+  width: 100%;
+}
+
+.popup {
+  position: absolute;
+}
+
+.to, .from {
+  width: 60%;
+  display: inline-block;
+}
