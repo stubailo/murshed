@@ -72,7 +72,7 @@ ul.nav a {
   padding-right: 20px;
 }
 
-.panel {
+.panel, .well {
   box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
   border-color: #999;
 }
