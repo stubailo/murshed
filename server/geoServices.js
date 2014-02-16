@@ -9,6 +9,7 @@ Meteor.methods({
 		  return nearby;
 		});
 	}
+	
 });
 
 
