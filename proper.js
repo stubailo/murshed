@@ -339,7 +339,7 @@ if (Meteor.isClient) {
             position: fromLatLng,
             map: map,
             title: 'Start',
-            icon: generateIcon("A", "FF4136")
+            icon: "/ya.png"
           });
         } else {
           fromMarker.setPosition(fromLatLng);
@@ -360,7 +360,7 @@ if (Meteor.isClient) {
             position: toLatLng,
             map: map,
             title: 'End',
-            icon: generateIcon("B", "FF4136")
+            icon: "/yb.png"
           });
         } else {
           toMarker.setPosition(toLatLng);
@@ -381,7 +381,7 @@ if (Meteor.isClient) {
             position: similarFromLatLng,
             map: map,
             title: 'Start',
-            icon: generateIcon("A", "7FDBFF")
+            icon: "/ba.png"
           });
         } else {
           similarFromMarker.setPosition(similarFromLatLng);
@@ -402,7 +402,7 @@ if (Meteor.isClient) {
             position: similarToLatLng,
             map: map,
             title: 'End',
-            icon: generateIcon("B", "7FDBFF")
+            icon: "/bb.png"
           });
         } else {
           similarToMarker.setPosition(similarToLatLng);
@@ -434,7 +434,7 @@ if (Meteor.isClient) {
             position: landmarkLatLng,
             map: map,
             title: 'Landmark',
-            icon: generateIcon("", "7FDBFF")
+            icon: "/bc.png"
           });
         } else {
           landmarkMarker.setPosition(landmarkLatLng);
