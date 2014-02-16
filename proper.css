@@ -47,10 +47,16 @@ h1, h2, h3 {
 }
 
 .navbar-brand,
-.navbar-nav li a {
+.navbar-nav li>a {
     line-height: 80px;
     height: 80px;
     padding-top: 0;
+}
+
+.navbar-text {
+  height: 80px;
+  margin: 0;
+  line-height: 80px;
 }
 
 .navbar-brand {
@@ -67,7 +73,7 @@ ul.nav {
   font-weight: bold;
 }
 
-ul.nav a {
+ul.nav li>a {
   padding-left: 20px;
   padding-right: 20px;
 }
