@@ -1,5 +1,7 @@
 <head>
   <title>proper</title>
+  <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXEYPYOtzrp0oiJ3UWSdoCozGa8WvFRfM&sensor=true"></script>
 </head>
 
 <body>
@@ -8,24 +10,30 @@
 
 <template name="page">
   <div class="container">
-    <h1>PropeRoute</h1>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">PropeRoute</a>
+      </div>
 
-    {{> directionsForm}}
+      <ul class="nav navbar-nav">
+        <li class="{{#if currentPage 'ask'}}active{{/if}}">
+          <a href="/">Ask for Directions</a></li>
+        <li class="{{#if currentPage 'answer'}}active{{/if}}">
+          <a href="/answer">Answer Questions</a></li>
+      </ul>
+    </nav>
 
-    <hr />
-
-    {{> questions}}
-
-    <hr />
-    <button class="update-foursquare">Update Foursquare destinations</button>
+    {{renderRouter}}
   </div>
 </template>
 
-<template name="directionsForm">
+<template name="admin">
+  <button class="update-foursquare">Update Foursquare destinations</button>
+</template>
+
+<template name="ask">
   <div class="row">
     <div class="col-sm-7">
-      <h3>Where are you headed?</h3>
-
       <div class="row">
         <div class="col-sm-6">
           <div class="panel panel-default">
@@ -71,7 +79,10 @@
         </div>
       </div>
 
+      {{> map}}
+    </div>
 
+    <div class="col-sm-5 sidebar">
       {{#if question}}
         {{#with question}}
           <div>
@@ -95,33 +106,42 @@
           </div>
         {{/with}}
       {{/if}}
-      
+
       {{#if similarQuestions}}
         <h3>Similar questions</h3>
-        {{#each similarQuestions}}
-          <div>
-            {{fromLandmark.name}}
-            <span class="glyphicon glyphicon-arrow-right"></span>
-            {{toLandmark.name}}
+        <div class="panel panel-default">
+          <div class="panel-body">
+            {{#each similarQuestions}}
+              <div><a href="#" class="similar-question-link">
+                {{fromLandmark.name}}
+                <span class="glyphicon glyphicon-arrow-right"></span>
+                {{toLandmark.name}}
+              </a></div>
+            {{/each}}
           </div>
-        {{/each}}
+        </div>
+      {{else}}
+        <div class="well">
+          No similar questions.
+        </div>
       {{/if}}
 
       {{#unless question}}
-        <button class="btn btn-lg btn-primary post-question">
-          Post Question</button>
+        {{#if questionPostable}}
+          <button class="btn btn-lg btn-primary post-question">
+            Post Question</button>
+        {{else}}
+          <div class="well">
+            Please enter a start location and an end location on the left to ask for directions!
+          </div>
+        {{/if}}
       {{/unless}}
-
-    </div>
-
-    <div class="col-sm-5">
-      Map here
     </div>
   </div>
 </template>
 
-<template name="questions">
-  <h2>Recent Questions</h2>
+<template name="answer">
+  <h2>Question Feed</h2>
   <div class="row">
     {{#each questions}}
       <div class="col-sm-7">
@@ -159,4 +179,11 @@
       </div>
     {{/each}}
   </div>
+</template>
+
+<template name="map">
+  {{#constant}}
+    <div class="google-map">
+    </div>
+  {{/constant}}
 </template>
