@@ -9,8 +9,8 @@
 </body>
 
 <template name="page">
-  <div class="container">
-    <nav class="navbar navbar-default" role="navigation">
+  <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">PropeRoute</a>
       </div>
@@ -21,8 +21,10 @@
         <li class="{{#if currentPage 'answer'}}active{{/if}}">
           <a href="/answer">Answer Questions</a></li>
       </ul>
-    </nav>
+    </div>
+  </nav>
 
+  <div class="container">
     {{renderRouter}}
   </div>
 </template>
@@ -107,23 +109,25 @@
         {{/with}}
       {{/if}}
 
-      {{#if similarQuestions}}
-        <h3>Similar questions</h3>
-        <div class="panel panel-default">
-          <div class="panel-body">
-            {{#each similarQuestions}}
-              <div><a href="#" class="similar-question-link">
-                {{fromLandmark.name}}
-                <span class="glyphicon glyphicon-arrow-right"></span>
-                {{toLandmark.name}}
-              </a></div>
-            {{/each}}
+      {{#if displaySimilarQuestions}}
+        {{#if similarQuestions}}
+          <h3>Similar questions</h3>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              {{#each similarQuestions}}
+                <div><a href="#" class="similar-question-link">
+                  {{fromLandmark.name}}
+                  <span class="glyphicon glyphicon-arrow-right"></span>
+                  {{toLandmark.name}}
+                </a></div>
+              {{/each}}
+            </div>
           </div>
-        </div>
-      {{else}}
-        <div class="well">
-          No similar questions.
-        </div>
+        {{else}}
+          <div class="well">
+            No similar questions.
+          </div>
+        {{/if}}
       {{/if}}
 
       {{#unless question}}
@@ -157,7 +161,7 @@
               <div>
                 <textarea class="answer-textarea form-control"></textarea>
               </div>
-              <div style="text-align: center">
+              <div style="text-align: center; margin-top: 10px">
                 <button class="post-answer btn btn-sm btn-success">Post Answer</button>
                 <button class="cancel-answering btn btn-sm btn-danger">Cancel</button>
               </div>
@@ -183,7 +187,11 @@
 
 <template name="map">
   {{#constant}}
-    <div class="google-map">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="google-map">
+        </div>
+      </div>
     </div>
   {{/constant}}
 </template>

@@ -14,7 +14,6 @@ if (Meteor.isClient) {
     if (from && to) {
         Meteor.call("getNearbyLandmarks", [from, to], function (error, result) {
           // result is array of [from locations, to locations]
-          console.log(result);
           var similarQuestions = Questions.find({
             from: {$in: _.map(result[0], function (landmark) {return landmark._id})},
             to: {$in: _.map(result[1], function (landmark) {return landmark._id})}
@@ -98,9 +97,11 @@ if (Meteor.isClient) {
     },
     "mouseover .landmark": function (event) {
       var name = $(event.target).text();
-      var prefix= Landmarks.findOne({name: name}).photos.groups[0].items[0].prefix;
-      var suffix = Landmarks.findOne({name: name}).photos.groups[0].items[0].suffix;
-      console.log(prefix + "100x100" + suffix);
+      var landmark = Landmarks.findOne({name: name});
+      Session.set("current-landmark", landmark);
+    },
+    "mouseout .landmark": function () {
+      Session.set("current-landmark", null);
     }
   });
 
@@ -161,19 +162,18 @@ if (Meteor.isClient) {
       });
     },
     similarQuestions: function () {
-      if (Session.get("selected-from") && Session.get("selected-to")) {
-        return _.filter(Session.get("similarQuestions"), function (question) {
-          // remove the current question, if any
-          if (question.from === Session.get("selected-from") &&
-            question.to === Session.get("selected-to")) {
-            return false;
-          }
+      return _.filter(Session.get("similarQuestions"), function (question) {
+        // remove the current question, if any
+        if (question.from === Session.get("selected-from") &&
+          question.to === Session.get("selected-to")) {
+          return false;
+        }
 
-          return true;
-        });
-      } else {
-        return false;
-      }
+        return true;
+      });
+    },
+    displaySimilarQuestions: function () {
+      return Session.get("selected-from") && Session.get("selected-to");
     },
     fromLandmark: function () {
       return Landmarks.findOne(this.from);
@@ -190,13 +190,9 @@ if (Meteor.isClient) {
         return untrimmed.substr(1, untrimmed.length - 2);
       });
 
-      console.log(answerLandmarks);
-
       answerLandmarks = Landmarks.find({
         name: {$in: answerLandmarks}
       }).fetch();
-
-      console.log(answerLandmarks);
 
       return this.text.replace(/\[/g, "<a href='#' class='landmark'>")
         .replace(/\]/g, "</a>");
@@ -242,13 +238,11 @@ if (Meteor.isClient) {
     },
     "focus textarea.answer-textarea": function (event, template) {
       if (! textcompleteEnabled) {
-        console.log("focused");
         textcompleteEnabled = true;
 
         $(template.find("textarea")).textcomplete([{
           match: /(^|\s)@(\w*)$/,
           search: function (term, callback) {
-            console.log(term);
             var regex = new RegExp(term, "i");
             var landmarks = Landmarks.find({name: regex}).fetch();
 
@@ -294,6 +288,8 @@ if (Meteor.isClient) {
   var similarFromMarker;
   var similarToMarker;
 
+  var landmarkMarker;
+
   var map;
 
   Template.map.rendered = function () {
@@ -317,12 +313,13 @@ if (Meteor.isClient) {
   };
 
   updateMarkers = function () {
-    console.log("update markers");
     var from = Landmarks.findOne(Session.get("selected-from"));
     var to = Landmarks.findOne(Session.get("selected-to"));
 
     var similarFrom = Landmarks.findOne(Session.get("similar-from"));
     var similarTo = Landmarks.findOne(Session.get("similar-to"));
+
+    var currentLandmark = Session.get("current-landmark");
 
     if (window.google) {
       var abuDhabiLatLng = new google.maps.LatLng(24.4667, 54.366);
@@ -414,6 +411,51 @@ if (Meteor.isClient) {
       } else if (similarToMarker) {
         similarToMarker.setMap(null);
         similarToMarker = null;
+      }
+
+      if (currentLandmark) {
+        var landmark = currentLandmark;
+
+        var prefix= landmark.photos.groups[0].items[0].prefix;
+        var suffix = landmark.photos.groups[0].items[0].suffix;
+        var imageUrl = prefix + "100x100" + suffix;
+        
+        var landmarkLatLng = new google.maps.LatLng(landmark.lngLat[1],
+          landmark.lngLat[0]);
+
+        newBounds.extend(landmarkLatLng);
+
+        var infoWindow = new google.maps.InfoWindow({
+          content: "<img src='" + imageUrl + "' />"
+        });
+
+        if (!landmarkMarker) {
+          landmarkMarker = new google.maps.Marker({
+            position: landmarkLatLng,
+            map: map,
+            title: 'Landmark',
+            icon: generateIcon("", "7FDBFF")
+          });
+        } else {
+          landmarkMarker.setPosition(landmarkLatLng);
+          landmarkMarker.setMap(map);
+        }
+
+        var openInfoWindow = function () {
+          infoWindow.close();
+          if (map && landmarkMarker) {
+            infoWindow.open(map, landmarkMarker);
+          }
+        };
+
+        openInfoWindow();
+
+        setTimeout(openInfoWindow, 1000);
+
+
+      } else if (landmarkMarker) {
+        landmarkMarker.setMap(null);
+        landmarkMarker = null;
       }
 
       if (from || to) {
