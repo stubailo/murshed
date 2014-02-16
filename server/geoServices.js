@@ -4,7 +4,7 @@ Meteor.methods({
 		  var searchedLandmark = Landmarks.findOne(landmarkId);
 		  var nearby = Landmarks.find( { lngLat :
                            { $near : searchedLandmark.lngLat,
-                             $maxDistance: 0.005
+                             $maxDistance: 0.01
                       } } ).fetch();
 		  return nearby;
 		});
