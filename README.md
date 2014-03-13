@@ -3,7 +3,9 @@ Guide مرشد
 
 **Guide** is a Meteor.js application developed for the 2014 NYU Abu Dhabi Hackathon for Social Good in the Arab World.
 
-Guide is a **landmark based**, **crowdsourced** itinerary planning app. 
+Guide is a **landmark based**, **crowdsourced** itinerary planning app.
+
+![Screenshot](http://i.imgur.com/2lDwfSN.jpg)
 
 ### Contributors
 
